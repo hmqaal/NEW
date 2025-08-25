@@ -7,19 +7,23 @@ export async function GET() {
     const email = "admin@example.com";
     const passwordHash = await bcrypt.hash("admin123", 10);
 
-    // Ensure an org exists
+    // ensure org
     const org = await prisma.organization.upsert({
       where: { slug: "default-org" },
       update: {},
       create: { name: "Default Organization", slug: "default-org" },
     });
 
-    // Upsert admin
+    // set (or reset) admin
     await prisma.user.upsert({
       where: { email },
       update: { passwordHash, role: "ADMIN", organizationId: org.id },
       create: {
-        email, name: "Admin User", passwordHash, role: "ADMIN", organizationId: org.id,
+        email,
+        name: "Admin User",
+        passwordHash,
+        role: "ADMIN",
+        organizationId: org.id,
       },
     });
 
