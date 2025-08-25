@@ -1,0 +1,20 @@
+[
+  {
+    "number": 1,
+    "nameArabic": "الفاتحة",
+    "nameEnglish": "Al-Fatiha",
+    "ayahCount": 7
+  },
+  {
+    "number": 2,
+    "nameArabic": "البقرة",
+    "nameEnglish": "Al-Baqarah",
+    "ayahCount": 286
+  },
+  {
+    "number": 3,
+    "nameArabic": "آل عمران",
+    "nameEnglish": "Ali 'Imran",
+    "ayahCount": 200
+  }
+]

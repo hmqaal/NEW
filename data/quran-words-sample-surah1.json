@@ -1,0 +1,34 @@
+[
+  {
+    "surahNumber": 1,
+    "ayahNumber": 1,
+    "wordIndex": 1,
+    "textUthmani": "بِسْمِ",
+    "pageNumber": 1,
+    "juzNumber": 1
+  },
+  {
+    "surahNumber": 1,
+    "ayahNumber": 1,
+    "wordIndex": 2,
+    "textUthmani": "ٱللَّهِ",
+    "pageNumber": 1,
+    "juzNumber": 1
+  },
+  {
+    "surahNumber": 1,
+    "ayahNumber": 1,
+    "wordIndex": 3,
+    "textUthmani": "ٱلرَّحْمَـٰنِ",
+    "pageNumber": 1,
+    "juzNumber": 1
+  },
+  {
+    "surahNumber": 1,
+    "ayahNumber": 1,
+    "wordIndex": 4,
+    "textUthmani": "ٱلرَّحِيمِ",
+    "pageNumber": 1,
+    "juzNumber": 1
+  }
+]
