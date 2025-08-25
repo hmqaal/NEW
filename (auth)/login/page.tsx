@@ -19,8 +19,10 @@ export default function LoginPage() {
     <main className="max-w-md mx-auto mt-10">
       <h1 className="text-xl font-semibold mb-4">Login</h1>
       <form onSubmit={onSubmit} className="space-y-3">
-        <input className="w-full border rounded p-2" type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
-        <input className="w-full border rounded p-2" type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
+        <input className="w-full border rounded p-2" type="email" placeholder="Email"
+               value={email} onChange={(e)=>setEmail(e.target.value)} required />
+        <input className="w-full border rounded p-2" type="password" placeholder="Password"
+               value={password} onChange={(e)=>setPassword(e.target.value)} required />
         {err && <p className="text-red-600 text-sm">{err}</p>}
         <button className="bg-slate-900 text-white rounded px-4 py-2" type="submit">Sign in</button>
       </form>
