@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -34,16 +35,18 @@ model Organization {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  email         String        @unique
-  name          String?
-  passwordHash  String
-  role          Role
-  organization  Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
-  teacherOf     TeacherClassroom[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id               String               @id @default(cuid())
+  email            String               @unique
+  name             String?
+  passwordHash     String
+  role             Role
+  organization     Organization?        @relation(fields: [organizationId], references: [id])
+  organizationId   String?
+  teacherOf        TeacherClassroom[]
+  createdAssignments HomeworkAssignment[] @relation("AssignmentCreator")
+  createdAttempts    HomeworkAttempt[]    @relation("AttemptCreator")
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 }
 
 model Classroom {
@@ -58,25 +61,25 @@ model Classroom {
 }
 
 model TeacherClassroom {
-  teacher   User      @relation(fields: [teacherId], references: [id])
-  teacherId String
-  classroom Classroom @relation(fields: [classroomId], references: [id])
+  teacher     User      @relation(fields: [teacherId], references: [id])
+  teacherId   String
+  classroom   Classroom @relation(fields: [classroomId], references: [id])
   classroomId String
 
   @@id([teacherId, classroomId])
 }
 
 model Student {
-  id           String     @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String?
-  guardianEmail String?
-  classroom    Classroom  @relation(fields: [classroomId], references: [id])
-  classroomId  String
-  assignments  HomeworkAssignment[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id             String               @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String?
+  guardianEmail  String?
+  classroom      Classroom            @relation(fields: [classroomId], references: [id])
+  classroomId    String
+  assignments    HomeworkAssignment[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 }
 
 model HomeworkAssignment {
@@ -88,7 +91,7 @@ model HomeworkAssignment {
   toAyah        Int
   dueDate       DateTime?
   status        AssignmentStatus  @default(PENDING)
-  createdBy     User              @relation(fields: [createdById], references: [id])
+  createdBy     User              @relation("AssignmentCreator", fields: [createdById], references: [id])
   createdById   String
   attempts      HomeworkAttempt[]
   createdAt     DateTime          @default(now())
@@ -98,13 +101,13 @@ model HomeworkAssignment {
 }
 
 model HomeworkAttempt {
-  id           String          @id @default(cuid())
+  id           String            @id @default(cuid())
   assignment   HomeworkAssignment @relation(fields: [assignmentId], references: [id])
   assignmentId String
   attemptNo    Int
   notes        String?
-  submittedAt  DateTime         @default(now())
-  createdBy    User             @relation(fields: [createdById], references: [id])
+  submittedAt  DateTime          @default(now())
+  createdBy    User              @relation("AttemptCreator", fields: [createdById], references: [id])
   createdById  String
   wordMarks    WordMark[]
 }
@@ -133,13 +136,13 @@ model Surah {
 }
 
 model Ayah {
-  id           String  @id @default(cuid())
-  surah        Surah   @relation(fields: [surahNumber], references: [number])
-  surahNumber  Int
-  numberInSurah Int
-  pageNumber   Int
-  juzNumber    Int
-  words        Word[]
+  id             String  @id @default(cuid())
+  surah          Surah   @relation(fields: [surahNumber], references: [number])
+  surahNumber    Int
+  numberInSurah  Int
+  pageNumber     Int
+  juzNumber      Int
+  words          Word[]
 
   @@unique([surahNumber, numberInSurah])
   @@index([pageNumber])
