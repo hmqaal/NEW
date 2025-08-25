@@ -1,43 +1,64 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import surahs from "../data/surahs.json" assert { type: "json" };
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const passwordHash = await bcrypt.hash("admin123", 10);
+  console.log('🌱 Seeding database...');
 
+  // Create default organization
   const org = await prisma.organization.upsert({
-    where: { slug: "demo-madrasa" },
+    where: { slug: 'default-org' },
     update: {},
     create: {
-      name: "Demo Madrasa",
-      slug: "demo-madrasa",
+      name: 'Default Organization',
+      slug: 'default-org',
     },
   });
 
+  // Create admin user
+  const adminEmail = 'admin@example.com';
+  const adminPassword = 'admin123';
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
+
   await prisma.user.upsert({
-    where: { email: "admin@example.com" },
+    where: { email: adminEmail },
     update: {},
     create: {
-      email: "admin@example.com",
-      name: "Admin",
+      email: adminEmail,
+      name: 'Admin User',
       passwordHash,
-      role: "ADMIN",
+      role: 'ADMIN',
       organizationId: org.id,
     },
   });
 
-  // Seed Surah metadata (subset for demo)
-  for (const s of surahs as any[]) {
-    await prisma.surah.upsert({
-      where: { number: s.number },
-      update: { nameArabic: s.nameArabic, nameEnglish: s.nameEnglish, ayahCount: s.ayahCount },
-      create: s as any,
-    });
-  }
+  // Seed one classroom
+  const classroom = await prisma.classroom.upsert({
+    where: { id: 'demo-classroom' },
+    update: {},
+    create: {
+      id: 'demo-classroom',
+      name: 'Demo Classroom',
+      organizationId: org.id,
+    },
+  });
 
-  console.log("Seed complete: admin + org + surah metadata.");
+  // Seed one student
+  await prisma.student.upsert({
+    where: { id: 'demo-student' },
+    update: {},
+    create: {
+      id: 'demo-student',
+      firstName: 'Ali',
+      lastName: 'Student',
+      email: 'student@example.com',
+      guardianEmail: 'parent@example.com',
+      classroomId: classroom.id,
+    },
+  });
+
+  console.log('✅ Database seeded successfully');
 }
 
 main()
