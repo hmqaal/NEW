@@ -5,9 +5,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prisma": "prisma",
     "seed": "prisma db seed",
     "import:quran": "ts-node scripts/import-quran.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
